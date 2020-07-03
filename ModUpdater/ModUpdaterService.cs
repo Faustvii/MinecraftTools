@@ -34,7 +34,8 @@ namespace ModUpdater {
             Log.Information("-----------------------------------");
             Log.Information("Starting the process to update mods");
             Log.Information("-----------------------------------");
-            
+            Directory.CreateDirectory("downloads");
+
             var startTime = Stopwatch.GetTimestamp();
 
             var modUpdated = false;
@@ -84,12 +85,18 @@ namespace ModUpdater {
                     if (!string.IsNullOrWhiteSpace(mod.Filename)) {
                         var originalFileName = Path.Combine(_settings.Minecraft.Path, _settings.Minecraft.ModFolderName, mod.Filename);
                         var newFileName = $"{Path.Combine(_settings.Minecraft.Path, _settings.Minecraft.ModFolderName, mod.Filename)}.disabled";
-                        File.Move(originalFileName, newFileName);
+                        if (File.Exists(originalFileName)) {
+                            File.Move(originalFileName, newFileName);
+                        }
                     }
 
                     var latestStagingFile = Path.Combine("downloads", updatedMod.Filename);
                     var latestModFile = Path.Combine(_settings.Minecraft.Path, _settings.Minecraft.ModFolderName, updatedMod.Filename);
-                    File.Move(latestStagingFile, latestModFile);
+                    if (!File.Exists(latestModFile)) {
+                        File.Move(latestStagingFile, latestModFile);
+                    } else {
+                        File.Delete(latestStagingFile);
+                    }
                 }
             }
 

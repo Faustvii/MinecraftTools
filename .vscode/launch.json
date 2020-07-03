@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/ModUpdater/bin/Debug/netcoreapp3.1/ModUpdater.dll",
+            "program": "${workspaceFolder}/ModUpdater/bin/Debug/netcoreapp3.1/win-x64/ModUpdater.dll",
             "args": [],
             "cwd": "${workspaceFolder}/ModUpdater",
             "console": "internalConsole",

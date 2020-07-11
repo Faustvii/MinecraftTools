@@ -47,6 +47,7 @@ namespace ModUpdater
         public string MinecraftVersionRegex { get; set; }
         public string ModVersionRegex { get; set; }
         public string ExtractFromField { get; set; }
+        public string ModVersionExtractFromField { get; set; }
         public long ProjectId { get; set; }
     }
 

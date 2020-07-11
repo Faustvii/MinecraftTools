@@ -42,7 +42,8 @@ namespace ModUpdater.Curse {
             var currentSemvar = SemVersion.Parse(currentVersion);
             var mcVersionFiles = ExtractSemVersionFromAssetNames(addon.LatestFiles, provider.MinecraftVersionRegex, provider.ExtractFromField);
             var filesMatchingMinecraftVersion = mcVersionFiles.Where(x => x.Value == currentMcSemvar);
-            var latestVersionFiles = ExtractSemVersionFromAssetNames(filesMatchingMinecraftVersion.Select(x => x.Key), provider.ModVersionRegex, provider.ExtractFromField);
+            var modExtractField = !string.IsNullOrWhiteSpace(provider.ModVersionExtractFromField) ? provider.ModVersionExtractFromField : provider.ExtractFromField;
+            var latestVersionFiles = ExtractSemVersionFromAssetNames(filesMatchingMinecraftVersion.Select(x => x.Key), provider.ModVersionRegex, modExtractField);
 
             var latestFile = GetLatestRelease(latestVersionFiles);
             return (currentSemvar >= latestFile.Version, latestFile.Version.ToString(), latestFile.Asset);

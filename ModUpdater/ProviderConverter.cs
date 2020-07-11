@@ -108,6 +108,7 @@ namespace ModUpdater {
                 writer.WriteString(nameof(CurseForgeProvider.MinecraftVersionRegex), curseForgeProvider.MinecraftVersionRegex);
                 writer.WriteString(nameof(CurseForgeProvider.ModVersionRegex), curseForgeProvider.ModVersionRegex);
                 writer.WriteString(nameof(CurseForgeProvider.ExtractFromField), curseForgeProvider.ExtractFromField);
+                writer.WriteString(nameof(CurseForgeProvider.ModVersionExtractFromField), curseForgeProvider.ModVersionExtractFromField);
                 writer.WriteNumber(nameof(CurseForgeProvider.ProjectId), curseForgeProvider.ProjectId);
                 writer.WriteEndObject();
 

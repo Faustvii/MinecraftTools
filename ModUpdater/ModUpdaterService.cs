@@ -143,6 +143,7 @@ namespace ModUpdater {
             var mcVersion = string.IsNullOrWhiteSpace(mod.OverrideMinecraftVersion) ? _settings.Minecraft.Version : mod.OverrideMinecraftVersion;
             var latestRelease = await _curseClient.IsLatestVersion(mod.CurrentVersion, provider, mcVersion);
             if (!latestRelease.UpToDate) {
+                Log.Information("Downloading update for {ModName} {CurrentVersion} -> {LatestVersion}", mod.Name, mod.CurrentVersion, latestRelease.Version);
                 var downloadResult = await _curseClient.DownloadLatestRelease(latestRelease.Asset);
                 if (downloadResult.Success) {
                     mod.Filename = downloadResult.FileName;
@@ -156,6 +157,7 @@ namespace ModUpdater {
             var mcVersion = string.IsNullOrWhiteSpace(mod.OverrideMinecraftVersion) ? _settings.Minecraft.Version : mod.OverrideMinecraftVersion;
             var latestRelease = await _githubClient.IsLatestRelease(mod.CurrentVersion, mcVersion, provider);
             if (!latestRelease.UpToDate) {
+                Log.Information("Downloading update for {ModName} {CurrentVersion} -> {LatestVersion}", mod.Name, mod.CurrentVersion, latestRelease.Version);
                 var downloadResult = await _githubClient.DownloadLatestRelease(latestRelease.Asset);
                 if (downloadResult.Success) {
                     mod.Filename = downloadResult.FileName;

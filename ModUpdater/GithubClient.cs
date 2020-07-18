@@ -56,7 +56,7 @@ namespace ModUpdater {
             var assetsMatchingMinecraftVersion = ExtractSemVersionFromAssetNames(allAssets, provider.MinecraftVersionRegex).Where(x => x.Value == currentMcSemvar);
             var assets = ExtractSemVersionFromAssetNames(assetsMatchingMinecraftVersion.Select(x => x.Key), provider.ModVersionRegex);
             var latestReleaseAsset = GetLatestRelease(assets);
-            return (currentSemvar >= latestReleaseAsset.Version, latestReleaseAsset.Version.ToString(), latestReleaseAsset.Asset);
+            return (currentSemvar >= latestReleaseAsset.Version, latestReleaseAsset.Version?.ToString(), latestReleaseAsset.Asset);
         }
 
         private IDictionary<Asset, SemVersion> ExtractSemVersionFromAssetNames(IEnumerable<Asset> assets, string regexPattern) {
@@ -73,31 +73,13 @@ namespace ModUpdater {
         }
 
         private(Asset Asset, SemVersion Version) GetLatestRelease(IDictionary<Asset, SemVersion> releases) {
-            var latestRelease = releases.First();
+            var latestRelease = releases.FirstOrDefault();
 
             foreach (var release in releases)
                 if (SemVersion.Compare(release.Value, latestRelease.Value) > 0)
                     latestRelease = release;
 
             return (latestRelease.Key, latestRelease.Value);
-        }
-
-        private Asset GetLatestReleaseAsset(GithubProvider provider, GithubRelease latestRelease) {
-            var releases = new Dictionary<Asset, SemVersion>();
-            var assets = latestRelease.Assets.Where(x => Regex.IsMatch(x.Name, provider.AssetRegex));
-
-            foreach (var asset in assets) {
-                var regexMatch = Regex.Match(asset.Name, provider.ModVersionRegex);
-                var version = regexMatch.Groups.Values.Last().Value;
-                var parsed = SemVersion.TryParse(version, out var semVersion);
-                if (parsed) {
-                    releases.Add(asset, semVersion);
-                }
-            }
-
-            var latestSemVer = GetLatestRelease(releases);
-            var latestAsset = releases.Single(x => x.Value == latestSemVer.Version).Key;
-            return latestAsset;
         }
 
         public async Task < (bool Success, string FileName) > DownloadLatestRelease(Asset latestReleaseAsset) {

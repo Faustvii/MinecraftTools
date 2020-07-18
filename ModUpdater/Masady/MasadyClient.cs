@@ -32,7 +32,7 @@ namespace ModUpdater.Masady {
             var latestVersion = latestAsset.Version;
             var isLatestVersion = latestVersion == currentSemvar;
 
-            return (isLatestVersion, latestVersion.ToString(), latestAsset.Asset);
+            return (isLatestVersion, latestVersion?.ToString(), latestAsset.Asset);
         }
 
         public async Task < (bool Success, string FileName) > DownloadLatestRelease(string assetUrl) {
@@ -40,7 +40,7 @@ namespace ModUpdater.Masady {
             return (true, fileName);
         }
         private(string Asset, SemVersion Version) GetLatestRelease(IDictionary<string, SemVersion> releases) {
-            var latestRelease = releases.First();
+            var latestRelease = releases.FirstOrDefault();
 
             foreach (var release in releases)
                 if (SemVersion.Compare(release.Value, latestRelease.Value) > 0)

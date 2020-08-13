@@ -79,6 +79,14 @@ namespace ModUpdater {
                 }
             }
 
+            //foreach(var mod in _settings.InstalledMods)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(mod.Filename))
+            //    {
+
+            //    }
+            //}
+
             foreach (var mod in previousMods) {
                 if (!_settings.InstalledMods.Any(x => x.Filename == mod.Filename)) {
                     var updatedMod = _settings.InstalledMods.First(x => x.Name == mod.Name && x.ProviderKey == mod.ProviderKey);
@@ -93,6 +101,26 @@ namespace ModUpdater {
                     var latestStagingFile = Path.Combine("downloads", updatedMod.Filename);
                     var latestModFile = Path.Combine(_settings.Minecraft.Path, _settings.Minecraft.ModFolderName, updatedMod.Filename);
                     if (!File.Exists(latestModFile)) {
+                        File.Move(latestStagingFile, latestModFile);
+                    } else {
+                        File.Delete(latestStagingFile);
+                    }
+                } else {
+                    var updatedMod = _settings.InstalledMods.First(x => x.Name == mod.Name && x.ProviderKey == mod.ProviderKey);
+                    if (string.IsNullOrWhiteSpace(updatedMod.Filename) || updatedMod.Filename == mod.Filename)
+                        continue;
+
+                    if (!string.IsNullOrWhiteSpace(mod.Filename)) {
+                        var originalFileName = Path.Combine(_settings.Minecraft.Path, _settings.Minecraft.ModFolderName, mod.Filename);
+                        var newFileName = $"{Path.Combine(_settings.Minecraft.Path, _settings.Minecraft.ModFolderName, mod.Filename)}.disabled";
+                        if (File.Exists(originalFileName)) {
+                            File.Move(originalFileName, newFileName);
+                        }
+                    }
+
+                    var latestStagingFile = Path.Combine("downloads", updatedMod.Filename);
+                    var latestModFile = Path.Combine(_settings.Minecraft.Path, _settings.Minecraft.ModFolderName, updatedMod.Filename);
+                    if (!File.Exists(latestModFile) && File.Exists(latestStagingFile)) {
                         File.Move(latestStagingFile, latestModFile);
                     } else {
                         File.Delete(latestStagingFile);
